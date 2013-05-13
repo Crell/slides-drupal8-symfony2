@@ -1,0 +1,21 @@
+{
+    "require": {
+        "components/revealjs": "*",
+        "components/highlightjs": "*"
+    },
+    "extra": {
+        "component": {
+            "name": "drupal8-symfony2",
+            "scripts": [
+                "assets/drupal8-symfony2.js"
+            ],
+            "styles": [
+                "components/revealjs/css/theme/default.css",
+                "assets/highlightjs-theme.css"
+            ],
+            "files": [
+                "assets/*"
+            ]
+        }
+    }
+}
