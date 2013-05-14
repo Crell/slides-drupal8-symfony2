@@ -4,12 +4,55 @@
     <meta charset="UTF-8" />
     <title>Modernizing Drupal using Symfony2</title>
     <link rel="stylesheet" href="components/require.css">
+    <style>
+      .background-drupalsites .reveal .state-background {
+        background-image: url("assets/drupalsites.png");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+      .background-denver .reveal .state-background {
+        background-image: url("assets/drupalcon-denver.jpg");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+      .background-fields .reveal .state-background {
+        background-image: url("assets/fields-background.jpg");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+      .background-rules .reveal .state-background {
+        background-image: url("assets/rules-background.png");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+      .background-space .reveal .state-background {
+        background-image: url("assets/space-background.jpg");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+      .top-align {
+        position: absolute;
+        top: -6em;
+      }
+      h1.inverse,
+      h2.inverse,
+      h3.inverse,
+      h4.inverse,
+      p.inverse {
+        color: #000;
+      }
+    </style>
   </head>
   <body>
     <div class="reveal">
       <div class="slides">
         <section>
-          <h1>Modernizing Drupal</h1>
+          <h2>Modernizing Drupal</h2>
           <h3>Using Symfony 2</h3>
           <p>
             <small>Presented by <a href="http://www.garfieldtech.com/">Larry Garfield</a></small>
@@ -17,7 +60,43 @@
         </section>
         <section>
           <section>
-            <h2>Act 1</h2>
+            <h2>Speaking of Drupal</h2>
+            <img src="assets/druplicon.svg" alt="Druplicon" data-credit="http://drupal.org/druplicon" style="height: 300px;" />
+          </section>
+          <section data-state="background-drupalsites">
+            <h3 class="top-align inverse">2% of the Web runs Drupal</h3>
+          </section>
+          <section data-state="background-denver">
+            &nbsp;
+          </section>
+          <section>
+            <h3>Over 20,000 new Drupal 7 sites every month</h3>
+            <img src="assets/drupal7-usage-stats.png" alt="Drupal 7 usage stats" />
+          </section>
+          <section>
+            <h2>Conclusion</h2>
+            <h3>Drupal is awesome!</h3>
+          </section>
+          <section data-state="background-fields">
+            <h2 style="text-align: left;">Entities/Fields</h2>
+            <p style="text-align: left;">Click together your own data structure</p>
+            <img src="assets/fields-ui.png" alt="Fields UI" style="margin-left: 100px; width: 75%" />
+          </section>
+          <section data-state="background-rules">
+            <h2 class="inverse" style="position: relative; top: -1em; text-align: right;">Rules</h2>
+            <p class="inverse" style="position: relative; top: -1em; text-align: right;">Click together your own business logic</p>
+            <img src="assets/rules-ui.png" alt="Rules UI" style="margin-left: 100px; width: 75%" />
+          </section>
+          <section data-state="background-space">
+            <h2 style="position: relative; top: -2em; text-align: left;">Views</h2>
+            <p style="position: relative; top: -4em; text-align: left;">Click together your own lists and queries</p>
+            <img src="assets/views-ui.png" alt="Views UI" style="margin-left: 100px; width: 75%" />
+          </section>
+          <section data-state="background-space">
+            <h2 style="position: relative; top: -2em; text-align: left;">Drupal</h2>
+            <p style="position: relative; top: -4em; text-align: left;">Click together your own site</p>
+            <img src="assets/views-slideshow.png" alt="A slideshow built with Views" style="position: relative; left: -150px; width: 75%;" />
+            <img src="assets/views-form.png" alt="A form built with Views" style="position: relative; top: -300px; left: 150px; width: 75%;" />
           </section>
         </section>
       </div>
