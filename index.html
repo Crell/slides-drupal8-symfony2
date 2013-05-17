@@ -101,16 +101,31 @@
         </section>
         <section>
           <section>
-            Drufony
+            <img src="assets/drufony.png" alt="Drupal + Symfony = Drufony" style="max-width: 75%;" />
           </section>
           <section>
-            Under construction picture
+            <img src="assets/under-construction.png" alt="This is all a work in progress" />
           </section>
           <section>
-            What are we using:
-            The big "Framework" bits: Foundation, Kernel, Routing, DI, Event, CMF Routing
-            YAML, Validator, Serializer
-            Tour of the process
+            <h2>What are we using?</h2>
+            <ul>
+              <li class="fragment">HttpFoundation</li>
+              <li class="fragment">HttpKernel</li>
+              <li class="fragment">Routing</li>
+              <li class="fragment">HttpFoundation</li>
+              <li class="fragment">DependencyInjection</li>
+              <li class="fragment">EventDispatcher</li>
+              <li class="fragment">Symfony CMF Routing</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Odds and ends</h2>
+            <ul>
+              <li class="fragment">ClassLoader</li>
+              <li class="fragment">YAML</li>
+              <li class="fragment">Serializer</li>
+              <li class="fragment">Validator</li>
+            </ul>
           </section>
           <section>
             How do you convert a system that big?
@@ -121,28 +136,185 @@
             Go easy on unit tests early on
           </section>
           <section>
-            index.php
+            <h2>index.php</h2>
+            <pre><code class="php">require_once __DIR__ . '/core/includes/bootstrap.inc';
+drupal_handle_request();
+</code></pre>
           </section>
           <section>
-            drupal_handle_request();
+            <h3>drupal_handle_request()</h3>
+            <pre><code class="php">function drupal_handle_request($test_only = FALSE) {
+  // Initialize the environment, load settings.php,
+  // activate a PSR-0 class autoloader with required namespaces registered.
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
+
+  $kernel = new DrupalKernel('prod', FALSE, drupal_classloader(), !$test_only);
+
+  $kernel->boot();
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
+
+  // Create a request object from the HttpFoundation.
+  $request = Request::createFromGlobals();
+  $response = $kernel->handle($request)->prepare($request)->send();
+
+  $kernel->terminate($request, $response);
+}</code></pre>
           </section>
           <section>
-            HttpKernel: Same as it ever was.
+            <h2>HttpKernel</h2>
+            <h3 class="fragment">Same as it ever was</h3>
           </section>
           <section>
-            CMF Router: Rewritten by us!
+            <h2>CMF Router</h2>
+            <p>Collaboration FTW!</p>
           </section>
           <section>
-            Show routing yml file
-            Talk about Route Enahncers to define controllers
-            "Won't get the full SCOTCH controller, but because of this we can easily swap it out."
+            <div style="background: White;">
+              <img src="assets/chainrouter.svg" alt="Symfony CMF Chain Router" style="width: 80%" />
+            </div>
           </section>
           <section>
-            ParamConverters: Auto upcasting!
+            <div style="background: White;">
+              <img src="assets/dynamicrouter.svg" alt="Symfony CMF Chain Router" />
+            </div>
           </section>
           <section>
-            Controllers: 4 syntaxes (function, method, service, controller interface)
-            And oh yeah, forms!
+            <h2>system.routing.yml</h2>
+            <pre><code class="yaml">
+system.cron:
+  pattern: '/cron/{key}'
+  defaults:
+    _controller: '\Drupal\system\CronController::run'
+  requirements:
+    _access_system_cron: 'TRUE'
+system.machine_name_transliterate:
+  pattern: '/machine_name/transliterate'
+  defaults:
+    _controller: '\Drupal\system\MachineNameController::transliterate'
+  requirements:
+    _permission: 'access content'
+</code></pre>
+          </section>
+          <section>
+            <h3>aggregator.routing.yml</h3>
+            <pre><code class="yaml">
+aggregator_admin_overview:
+  pattern: 'admin/config/services/aggregator'
+  defaults:
+    _content: '\Drupal\aggregator\Routing\AggregatorController::adminOverview'
+  requirements:
+    _permission: 'administer news feeds'
+
+aggregator_admin_settings:
+  pattern: 'admin/config/services/aggregator/settings'
+  defaults:
+    _form: '\Drupal\aggregator\Form\SettingsForm'
+  requirements:
+    _permission: 'administer news feeds'
+</code></pre>
+          </section>
+          <section>
+            <h2>Route Enhancers</h2>
+            <pre><code class="php">class ContentControllerEnhancer implements RouteEnhancerInterface {
+  // ...
+
+  protected $types = array(
+    'drupal_dialog' => 'controller.dialog:dialog',
+    'drupal_modal' => 'controller.dialog:modal',
+    'html' => 'controller.page:content',
+  );
+
+  public function enhance(array $defaults, Request $request) {
+    if (empty($defaults['_controller']) && !empty($defaults['_content'])) {
+      $type = $this->negotiation->getContentType($request);
+      if (isset($this->types[$type])) {
+        $defaults['_controller'] = $this->types[$type];
+      }
+    }
+    return $defaults;
+  }
+}
+</code></pre>
+          </section>
+          <section>
+            <p>Any <em>_content</em> route can be a page, or modal, or ajax replacement, automatically!</p>
+            <br />
+            <p class="fragment">That's the power of mime types</p>
+            <br />
+            <p class="fragment">(<em>_form</em> routes soon as well)</p>
+          </section>
+          <section>
+            <h3>Built-in ParamConverter</h3>
+            <pre><code class="php">class ParamConverterManager implements RouteEnhancerInterface {
+  public function enhance(array $defaults, Request $request) {
+    $converters = array();
+
+    $route = $defaults[RouteObjectInterface::ROUTE_OBJECT];
+
+    foreach ($this->converters as $converter) {
+      $converter->process($defaults, $route, $converters);
+    }
+
+    // ...
+
+    return $defaults;
+  }
+}
+</code></pre>
+          </section>
+          <section>
+            <h2>Controllers</h2>
+            <p>It's just ControllerResolver</p>
+            <ul>
+              <li class="fragment">Function (once we remove a BC shiv)</li>
+              <li class="fragment">POPO method</li>
+              <li class="fragment">ContainerAware object method</li>
+              <li class="fragment">Services (methods)</li>
+              <li class="fragment">Closures (but we don't use 'em)</li>
+              <li class="fragment">ControllerInterface</li>
+            </ul>
+          </section>
+          <section>
+            <h2>ControllerInterface</h2>
+            <pre><code class="php">interface ControllerInterface {
+  /**
+   * Instantiates a new instance of this controller.
+   *
+   * @param ContainerInterface $container
+   *   The service container this object should use.
+   */
+  public static function create(ContainerInterface $container);
+}
+</code></pre>
+          </section>
+          <section>
+            <h2>ControllerInterface</h2>
+            <pre><code class="php">class AggregatorController implements ControllerInterface {
+  protected $entityManager;
+  protected $database;
+
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin.manager.entity'),
+      $container->get('database')
+    );
+  }
+
+  public function __construct(EntityManager $entity_manager, Connection $database) {
+    $this->entityManager = $entity_manager;
+    $this->database = $database;
+  }
+
+  public function feedAdd() {
+    $feed = $this->entityManager
+      ->getStorageController('aggregator_feed')
+      ->create(array(
+        'refresh' => 3600,
+        'block' => 5,
+      ));
+    // ...
+  }
+</code></pre>
           </section>
           <section>
             Controllers: Return strings or render arrays or Response.
@@ -152,6 +324,9 @@
           </section>
           <section>
             Advanced stuff: Modals/Dialogs
+          </section>
+          <section>
+            REST module.
           </section>
         </section>
         <section>
