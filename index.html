@@ -46,6 +46,9 @@
       p.inverse {
         color: #000;
       }
+      .reveal pre {
+        width: 100%;
+      }
     </style>
   </head>
   <body>
@@ -57,6 +60,9 @@
           <p>
             <small>Presented by <a href="http://www.garfieldtech.com/">Larry Garfield</a></small>
           </p>
+        </section>
+        <section>
+          <img src="assets/palantirnet-logo-2013.svg" style="width: 75%" />
         </section>
         <section>
           <section>
@@ -263,6 +269,29 @@ aggregator_admin_settings:
 </code></pre>
           </section>
           <section>
+            <h2>Dynamic routes</h2>
+            <pre><code class="php">class RouteSubscriber implements EventSubscriberInterface {
+  /**
+   * Adds routes to enabled REST resources.
+   *
+   * @param \Drupal\Core\Routing\RouteBuildEvent $event
+   *   The route building event.
+   */
+  public function dynamicRoutes(RouteBuildEvent $event) {
+    $collection = $event->getRouteCollection();
+    foreach ($user_settings as $thing) {
+      $collection->add('route.' . $thing->name, new Route('/thing/' . $thing->name, ...));
+    }
+  }
+
+  static function getSubscribedEvents() {
+    $events[RoutingEvents::DYNAMIC] = 'dynamicRoutes';
+    return $events;
+  }
+}
+</code></pre>
+          </section>
+          <section>
             <h2>Controllers</h2>
             <p>It's just ControllerResolver</p>
             <ul>
@@ -326,13 +355,72 @@ aggregator_admin_settings:
             <p class="fragment">Depends on your use case</p>
           </section>
           <section>
-            Advanced stuff: Ajax API, including controller switching
+            <h2>Ajax API</h2>
+            <p class="fragment">AjaxResponse extends Response</p>
           </section>
           <section>
-            Advanced stuff: Modals/Dialogs
+            <pre><code class="php">function system_date_time_lookup($form, &$form_state) {
+  $format = '';
+  if (!empty($form_state['values']['date_format_pattern'])) {
+    $format = t('Displayed as %date_format', array(
+      '%date_format' => format_date(REQUEST_TIME, 'custom', $form_state['values']['date_format_pattern']))
+    );
+  }
+  $response = new AjaxResponse();
+  $response->addCommand(new ReplaceCommand('#edit-date-format-suffix', '<small id="edit-date-format-suffix">' . $format . '</small>'));
+  return $response;
+}</code></pre>
           </section>
           <section>
-            REST module.
+            <h2>REST support</h2>
+            <ul>
+              <li class="fragment">Based on Serializer Component</li>
+              <li class="fragment">HAL out of the box</li>
+              <li class="fragment">Any entity (or other resource)</li>
+              <li class="fragment">Same URI as HTML page (soon)</li>
+              <li class="fragment">Cookie-and-token security</li>
+              <li class="fragment">HTTP Auth <a href="">needs work</a></li>
+            </ul>
+          </section>
+          <section>
+            <h2>REST: Entities</h2>
+            <ul>
+              <li class="fragment">GET /node/1</li>
+              <li class="fragment">DELETE /node/1</li>
+              <li class="fragment">POST /node</li>
+              <li class="fragment">PATCH /node/1</li>
+            </ul>
+          </section>
+          <section>
+            <h2>REST: Log entries</h2>
+            <ul>
+              <li class="fragment">GET /dblog/1</li>
+            </ul>
+          </section>
+          <section>
+            <h2>REST: Your resource</h2>
+            <pre><code class="php">interface ResourceInterface extends PluginInspectionInterface {
+
+  /**
+   * Returns a collection of routes with URL path information for the resource.
+   *
+   * @return \Symfony\Component\Routing\RouteCollection
+   */
+  public function routes();
+
+  /**
+   * Provides an array of permissions suitable for hook_permission().
+   */
+  public function permissions();
+
+  /**
+   * Returns the available HTTP request methods on this plugin.
+   *
+   * @return array
+   *   The list of supported methods. Example: array('GET', 'POST', 'PATCH').
+   */
+  public function availableMethods();
+</code></pre>
           </section>
         </section>
         <section>
