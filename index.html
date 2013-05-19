@@ -134,12 +134,52 @@
             </ul>
           </section>
           <section>
-            How do you convert a system that big?
-            One step at a time, and we're not done. And won't be.
+            <p>How do you convert a system that big?</p>
+            <p class="fragment">One bite at a time</p>
+            <p class="fragment">Accept that it won't all be done</p>
+          </section>
+          <section>
+            <h2>Dependency Injection</h2>
+            <pre><code class="php">class Drupal {
+  protected static $container;
 
-            Drupal:: / services.yml
-            Controller conversion
-            Go easy on unit tests early on
+  public static function setContainer(ContainerInterface $container) {
+    static::$container = $container;
+  }
+
+  public static function service($id) {
+    return static::$container->get($id);
+  }
+
+  public static function entityManager() {
+    return static::$container->get('plugin.manager.entity');
+  }
+
+  public static function database() {
+    return static::$container->get('database');
+  }
+}</code></pre>
+          </section>
+          <section>
+            <h3>Eew, a service locator?</h3>
+            <p class="fragment">One global singleton instead of dozens</p>
+            <p class="fragment">Migrate services over time</p>
+            <p class="fragment">Wherever we land still works</p>
+            <p class="fragment">Remove it... eventually</p>
+          </section>
+          <section>
+            <h3>overlay.services.yml</h3>
+            <pre><code class="yaml">services:
+  overlay.subscriber:
+    class: Drupal\overlay\EventSubscriber\OverlaySubscriber
+    tags:
+      - { name: event_subscriber }
+</code></pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>Routing</h2>
           </section>
           <section>
             <h2>index.php</h2>
@@ -272,10 +312,9 @@ aggregator_admin_settings:
             <h2>Dynamic routes</h2>
             <pre><code class="php">class RouteSubscriber implements EventSubscriberInterface {
   /**
-   * Adds routes to enabled REST resources.
+   * Adds routes on the fly.
    *
    * @param \Drupal\Core\Routing\RouteBuildEvent $event
-   *   The route building event.
    */
   public function dynamicRoutes(RouteBuildEvent $event) {
     $collection = $event->getRouteCollection();
@@ -367,12 +406,17 @@ aggregator_admin_settings:
     );
   }
   $response = new AjaxResponse();
-  $response->addCommand(new ReplaceCommand('#edit-date-format-suffix', '<small id="edit-date-format-suffix">' . $format . '</small>'));
+  $response->addCommand(new ReplaceCommand('#format', '&lt;small id="format">' . $format . '&lt;/small>'));
   return $response;
 }</code></pre>
           </section>
+        </section>
+        <section>
           <section>
-            <h2>REST support</h2>
+            <h2>REST</h2>
+          </section>
+          <section>
+            <h2>REST module</h2>
             <ul>
               <li class="fragment">Based on Serializer Component</li>
               <li class="fragment">HAL out of the box</li>
@@ -424,6 +468,22 @@ aggregator_admin_settings:
           </section>
         </section>
         <section>
+          <section>
+            <h2>Anything non-Symfonic?</h2>
+          </section>
+          <section>
+            <h2>Plugins</h2>
+            <p>User-configurable logic</p>
+          </section>
+          <section>
+            <h2>Entities</h2>
+            <ul>
+              <li class="fragment"></li>
+              <li class="fragment"></li>
+              <li class="fragment"></li>
+              <li class="fragment"></li>
+            </ul>
+          </section>
           <section>
             What are we doing that is NOT Symfony?
             Plugins, Entity API, our own Translation, CMI
