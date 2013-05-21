@@ -62,7 +62,15 @@
           </p>
         </section>
         <section>
-          <img src="assets/palantirnet-logo-2013.svg" style="width: 75%" />
+          <h2><a href="http://twitter.com/Crell">@Crell</a></h2>
+          <img src="assets/palantirnet-logo-2013.svg" alt="Palantir.net Pays me!" style="width: 300px; background: #FFF; float: right;" />
+          <ul>
+            <li>Senior Architect, <a href="http://www.palantir.net/">Palantir.net</a></li>
+            <li>Drupal 8 Web Services Lead</li>
+            <li>Drupal Representative, <a href="http://www.php-fig.org/">PHP-FIG</a></li>
+            <li>Advisor, Drupal Association</li>
+            <li>General busybody</li>
+          </ul>
         </section>
         <section>
           <section>
@@ -104,13 +112,45 @@
             <img src="assets/views-slideshow.png" alt="A slideshow built with Views" style="position: relative; left: -150px; width: 75%;" />
             <img src="assets/views-form.png" alt="A form built with Views" style="position: relative; top: -300px; left: 150px; width: 75%;" />
           </section>
+          <section>
+            <h2>Time to kick some ass<br />in Drupal 8</h2>
+            <img src="assets/drupal8-kick-ass.jpg" alt="Drupal 8 will kick ass" style="height: 400px" />
+          </section>
+          <section>
+            <p>Just one teeny little problem...</p>
+          </section>
+          <section>
+            <img src="assets/dries-college.jpg" alt="Dries in College" />
+          </section>
+          <section>
+            <p>Drupal is an <em>12 year old</em>, <em>PHP 4-based</em> extensible
+              <em>Slashdot clone</em> originally written by a Belgian <em>college kid</em>.</p>
+          </section>
+          <section>
+            <img src="assets/drupal-to-desktop.png" alt="Drupal was build for a desktop world" />
+          </section>
+          <section>
+            <img src="assets/mobile-planet.png" alt="The future is mobile" />
+          </section>
+          <section>
+            <img src="assets/drupal-connected.png" alt="The future of Drupal is mobile" />
+          </section>
+          <section>
+            <img src="assets/kitten-will-fix.jpg" alt="Kitten will fix it" data-credit="http://icanhascheezburger.com/2007/01/12/wait-ill-fix-it-2/" />
+          </section>
+          <section class="slide">
+            <h2>The mission...</h2>
+            <blockquote>Drupal needs to evolve, and quickly, from a
+              first-class web CMS into a first-class REST server that includes a
+              first-class web CMS.</blockquote>
+          </section>
         </section>
         <section>
           <section>
-            <img src="assets/drufony.png" alt="Drupal + Symfony = Drufony" style="max-width: 75%;" />
+            <img src="assets/drufony.png" alt="Drupal + Symfony = Drufony" style="max-height: 500px;" />
           </section>
           <section>
-            <img src="assets/under-construction.png" alt="This is all a work in progress" />
+            <img src="assets/under-construction.png" alt="This is all a work in progress" style="max-height: 600px;" />
           </section>
           <section>
             <h2>What are we using?</h2>
@@ -140,7 +180,8 @@
           </section>
           <section>
             <h2>Dependency Injection</h2>
-            <pre><code class="php">class Drupal {
+            <pre><code class="php">&lt;?php
+class Drupal {
   protected static $container;
 
   public static function setContainer(ContainerInterface $container) {
@@ -158,7 +199,9 @@
   public static function database() {
     return static::$container->get('database');
   }
-}</code></pre>
+}
+?>
+</code></pre>
           </section>
           <section>
             <h3>Eew, a service locator?</h3>
@@ -168,12 +211,11 @@
             <p class="fragment">Remove it... eventually</p>
           </section>
           <section>
-            <h3>overlay.services.yml</h3>
+            <h3>book.services.yml</h3>
             <pre><code class="yaml">services:
-  overlay.subscriber:
-    class: Drupal\overlay\EventSubscriber\OverlaySubscriber
-    tags:
-      - { name: event_subscriber }
+  book.manager:
+    class: Drupal\book\BookManager
+    arguments: ['@database']
 </code></pre>
           </section>
         </section>
@@ -183,13 +225,15 @@
           </section>
           <section>
             <h2>index.php</h2>
-            <pre><code class="php">require_once __DIR__ . '/core/includes/bootstrap.inc';
+            <pre><code class="php">&lt;?php
+require_once __DIR__ . '/core/includes/bootstrap.inc';
 drupal_handle_request();
 </code></pre>
           </section>
           <section>
             <h3>drupal_handle_request()</h3>
-            <pre><code class="php">function drupal_handle_request($test_only = FALSE) {
+            <pre><code class="php">&lt;?php
+function drupal_handle_request($test_only = FALSE) {
   // Initialize the environment, load settings.php,
   // activate a PSR-0 class autoloader with required namespaces registered.
   drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
@@ -204,7 +248,8 @@ drupal_handle_request();
   $response = $kernel->handle($request)->prepare($request)->send();
 
   $kernel->terminate($request, $response);
-}</code></pre>
+}
+?></code></pre>
           </section>
           <section>
             <h2>HttpKernel</h2>
@@ -261,7 +306,8 @@ aggregator_admin_settings:
           </section>
           <section>
             <h2>Route Enhancers</h2>
-            <pre><code class="php">class ContentControllerEnhancer implements RouteEnhancerInterface {
+            <pre><code class="php">&lt;?php
+class ContentControllerEnhancer implements RouteEnhancerInterface {
   // ...
 
   protected $types = array(
@@ -280,6 +326,7 @@ aggregator_admin_settings:
     return $defaults;
   }
 }
+?>
 </code></pre>
           </section>
           <section>
@@ -291,7 +338,8 @@ aggregator_admin_settings:
           </section>
           <section>
             <h3>Built-in ParamConverter</h3>
-            <pre><code class="php">class ParamConverterManager implements RouteEnhancerInterface {
+            <pre><code class="php">&lt;?php
+class ParamConverterManager implements RouteEnhancerInterface {
   public function enhance(array $defaults, Request $request) {
     $converters = array();
 
@@ -306,6 +354,7 @@ aggregator_admin_settings:
     return $defaults;
   }
 }
+?>
 </code></pre>
           </section>
           <section>
@@ -328,6 +377,7 @@ aggregator_admin_settings:
     return $events;
   }
 }
+?>
 </code></pre>
           </section>
           <section>
@@ -353,11 +403,13 @@ aggregator_admin_settings:
    */
   public static function create(ContainerInterface $container);
 }
+?>
 </code></pre>
           </section>
           <section>
             <h2>ControllerInterface</h2>
-            <pre><code class="php">class AggregatorController implements ControllerInterface {
+            <pre><code class="php">&lt;?php
+class AggregatorController implements ControllerInterface {
   protected $entityManager;
   protected $database;
 
@@ -382,6 +434,8 @@ aggregator_admin_settings:
       ));
     // ...
   }
+}
+?>
 </code></pre>
           </section>
           <section>
@@ -393,12 +447,15 @@ aggregator_admin_settings:
             </ul>
             <p class="fragment">Depends on your use case</p>
           </section>
+        </section>
+        <section>
           <section>
             <h2>Ajax API</h2>
             <p class="fragment">AjaxResponse extends Response</p>
           </section>
           <section>
-            <pre><code class="php">function system_date_time_lookup($form, &$form_state) {
+            <pre><code class="php">&lt;?php
+function system_date_time_lookup($form, &$form_state) {
   $format = '';
   if (!empty($form_state['values']['date_format_pattern'])) {
     $format = t('Displayed as %date_format', array(
@@ -408,7 +465,9 @@ aggregator_admin_settings:
   $response = new AjaxResponse();
   $response->addCommand(new ReplaceCommand('#format', '&lt;small id="format">' . $format . '&lt;/small>'));
   return $response;
-}</code></pre>
+}
+?>
+</code></pre>
           </section>
         </section>
         <section>
@@ -423,7 +482,7 @@ aggregator_admin_settings:
               <li class="fragment">Any entity (or other resource)</li>
               <li class="fragment">Same URI as HTML page (soon)</li>
               <li class="fragment">Cookie-and-token security</li>
-              <li class="fragment">HTTP Auth <a href="">needs work</a></li>
+              <li class="fragment">HTTP Auth <a href="http://drupal.org/node/1890878">needs work</a></li>
             </ul>
           </section>
           <section>
@@ -443,7 +502,8 @@ aggregator_admin_settings:
           </section>
           <section>
             <h2>REST: Your resource</h2>
-            <pre><code class="php">interface ResourceInterface extends PluginInspectionInterface {
+            <pre><code class="php">&lt;?php
+interface ResourceInterface extends PluginInspectionInterface {
 
   /**
    * Returns a collection of routes with URL path information for the resource.
@@ -464,6 +524,8 @@ aggregator_admin_settings:
    *   The list of supported methods. Example: array('GET', 'POST', 'PATCH').
    */
   public function availableMethods();
+}
+?>
 </code></pre>
           </section>
         </section>
@@ -476,30 +538,47 @@ aggregator_admin_settings:
             <p>User-configurable logic</p>
           </section>
           <section>
+            Get help from Kris
+          </section>
+          <section>
             <h2>Entities</h2>
             <ul>
-              <li class="fragment"></li>
-              <li class="fragment"></li>
-              <li class="fragment"></li>
-              <li class="fragment"></li>
+              <li class="fragment">Basic data object system</li>
+              <li class="fragment">"Don't call it an ORM" (even though it is)</li>
+              <li class="fragment">Version 3, basically</li>
             </ul>
           </section>
           <section>
-            What are we doing that is NOT Symfony?
-            Plugins, Entity API, our own Translation, CMI
+            <h2>Entities</h2>
+            <q>Why aren't you guys just using Doctrine?</q>
+            <ul>
+              <li class="fragment">Lots of existing architecture</li>
+              <li class="fragment">Doctrine is a very different model</li>
+              <li class="fragment">Need far more runtime behavior</li>
+            </ul>
           </section>
           <section>
-            Plugins (Hm, need a crash course)
+            Get help from Fago
           </section>
           <section>
-            Entity API
-            Why not Doctrine ORM? Different model, lots of legacy
+            <h3>Disk-based configuration</h3>
+            <ul>
+              <li class="fragment">No more DB configuration!</li>
+              <li class="fragment">(Generated) YAML configuration <i class="fragment">(YAML Component)</i></li>
+              <li class="fragment">Stage/import/deploy built-in</li>
+            </ul>
           </section>
           <section>
-            CMI: Read/write YAML with caching!
+            Sample of config file
           </section>
           <section>
-            Hooks live... But probably bridged to HookEvent
+            <h3>Hooks</h3>
+            <ul>
+              <li class="fragment">Procedural events/AOP/config in one</li>
+              <li class="fragment">Will live through Drupal 8</li>
+              <li class="fragment">Expect bridge to EventDispatcher</li>
+              <li class="fragment">Don't expect them in Drupal 9</li>
+            </ul>
           </section>
         </section>
         <section>
@@ -552,12 +631,22 @@ aggregator_admin_settings:
             <img src="assets/no-ie.png" alt="IE 9 is our minimum version" />
           </section>
           <section>
-          Other goodness:
-          Tour module
-          Edit module
-          WYSIWYG (CKEditor) by default (you can disable it)
-          Redesigned edit pages
-          New toolbar
+            <h3>WYSIWYG</h3>
+            <img src="assets/node-add-form.png" alt="The node add form is easier than ever, and now has WYSIWYG." />
+          </section>
+          <section>
+            <h3>Inline editing</h3>
+            <img src="assets/inline-editing.png" alt="Inline editing is now baked in." />
+          </section>
+          <section class="slide">
+            <h2>Drupal Components</h2>
+            <ul>
+              <li class="fragment">PhpStorage</li>
+              <li class="fragment">Gettext</li>
+              <li class="fragment">Archiver</li>
+              <li class="fragment">Graph</li>
+              <li class="fragment">Reflection</li>
+            </ul>
           </section>
         </section>
         <section>
