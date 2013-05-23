@@ -367,8 +367,7 @@ aggregator_admin_settings:
           </section>
           <section>
             <h2>ControllerInterface</h2>
-            <pre><code class="php">&lt;?php
-class AggregatorController implements ControllerInterface {
+            <pre><code class="php">class AggregatorController implements ControllerInterface {
   protected $entityManager;
   protected $database;
 
@@ -412,8 +411,7 @@ class AggregatorController implements ControllerInterface {
             <p class="fragment">AjaxResponse extends Response</p>
           </section>
           <section>
-            <pre><code class="php">&lt;?php
-function system_date_time_lookup($form, &$form_state) {
+            <pre><code class="php">function system_date_time_lookup($form, &$form_state) {
   $format = '';
   if (!empty($form_state['values']['date_format_pattern'])) {
     $format = t('Displayed as %date_format', array(
@@ -548,6 +546,7 @@ class Tar implements ArchiverInterface {
             <ul>
               <li class="fragment">Basic data object system</li>
               <li class="fragment">"Don't call it an ORM" (even though it is)</li>
+              <li class="fragment">Leverages Validator</li>
               <li class="fragment">Version 3, basically</li>
               <li class="fragment">... and $node->save() works now!</li>
             </ul>
