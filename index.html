@@ -3,38 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <title>Modernizing Drupal using Symfony2</title>
-    <link rel="stylesheet" href="components/require.css">
+    <link rel="stylesheet" href="components/require.css" />
+    <link rel="stylesheet" href="components/revealjs/css/theme/default.css" />
+    <link rel="stylesheet" href="components/revealjs/lib/css/zenburn.css" />
     <style>
-      .background-drupalsites .reveal .state-background {
-        background-image: url("assets/drupalsites.png");
-        background-size: 100%;
-        background-repeat: no-repeat;
-        background-position: center;
-      }
-      .background-denver .reveal .state-background {
-        background-image: url("assets/drupalcon-denver.jpg");
-        background-size: 100%;
-        background-repeat: no-repeat;
-        background-position: center;
-      }
-      .background-fields .reveal .state-background {
-        background-image: url("assets/fields-background.jpg");
-        background-size: 100%;
-        background-repeat: no-repeat;
-        background-position: center;
-      }
-      .background-rules .reveal .state-background {
-        background-image: url("assets/rules-background.png");
-        background-size: 100%;
-        background-repeat: no-repeat;
-        background-position: center;
-      }
-      .background-space .reveal .state-background {
-        background-image: url("assets/space-background.jpg");
-        background-size: 100%;
-        background-repeat: no-repeat;
-        background-position: center;
-      }
       .top-align {
         position: absolute;
         top: -6em;
@@ -55,8 +27,8 @@
     <div class="reveal">
       <div class="slides">
         <section>
-          <h2>Modernizing Drupal</h2>
-          <h3>Using Symfony 2</h3>
+          <h1>Modernizing Drupal</h1>
+          <h2>Using Symfony 2</h2>
           <p>
             <small>Presented by <a href="http://www.garfieldtech.com/">Larry Garfield</a></small>
           </p>
@@ -77,11 +49,17 @@
             <h2>Speaking of Drupal</h2>
             <img src="assets/druplicon.svg" alt="Druplicon" data-credit="http://drupal.org/druplicon" style="height: 300px;" />
           </section>
-          <section data-state="background-drupalsites">
+          <section fullscreen-img="assets/drupalsites.png" class="fullscreen">
             <h3 class="top-align inverse">2% of the Web runs Drupal</h3>
           </section>
-          <section data-state="background-denver">
+          <section fullscreen-img="assets/drupalcon-denver.jpg" class="fullscreen">
             &nbsp;
+          </section>
+          <section fullscreen-img="assets/drupalcon-portland.jpg" class="fullscreen">
+            &nbsp;
+          </section>
+          <section>
+            <img src="assets/oss-community-size.png" alt="Drupal's community is enormous" />
           </section>
           <section>
             <h3>Over 20,000 new Drupal 7 sites every month</h3>
@@ -91,26 +69,26 @@
             <h2>Conclusion</h2>
             <h3>Drupal is awesome!</h3>
           </section>
-          <section data-state="background-fields">
+          <section fullscreen-img="assets/fields-background.jpg" class="fullscreen">
             <h2 style="text-align: left;">Entities/Fields</h2>
             <p style="text-align: left;">Click together your own data structure</p>
             <img src="assets/fields-ui.png" alt="Fields UI" style="margin-left: 100px; width: 75%" />
           </section>
-          <section data-state="background-rules">
+          <section fullscreen-img="assets/rules-background.png" class="fullscreen">
             <h2 class="inverse" style="position: relative; top: -1em; text-align: right;">Rules</h2>
             <p class="inverse" style="position: relative; top: -1em; text-align: right;">Click together your own business logic</p>
             <img src="assets/rules-ui.png" alt="Rules UI" style="margin-left: 100px; width: 75%" />
           </section>
-          <section data-state="background-space">
-            <h2 style="position: relative; top: -2em; text-align: left;">Views</h2>
-            <p style="position: relative; top: -4em; text-align: left;">Click together your own lists and queries</p>
+          <section fullscreen-img="assets/space-background.jpg" class="fullscreen">
+            <h2 style="text-align: left;">Views</h2>
+            <p style="text-align: left;">Click together your own lists and queries</p>
             <img src="assets/views-ui.png" alt="Views UI" style="margin-left: 100px; width: 75%" />
           </section>
-          <section data-state="background-space">
-            <h2 style="position: relative; top: -2em; text-align: left;">Drupal</h2>
-            <p style="position: relative; top: -4em; text-align: left;">Click together your own site</p>
+          <section fullscreen-img="assets/space-background.jpg" class="fullscreen">
+            <h2 style="text-align: left;">Drupal</h2>
+            <p style="text-align: left;">Click together your own site</p>
             <img src="assets/views-slideshow.png" alt="A slideshow built with Views" style="position: relative; left: -150px; width: 75%;" />
-            <img src="assets/views-form.png" alt="A form built with Views" style="position: relative; top: -300px; left: 150px; width: 75%;" />
+            <img src="assets/views-form.png" alt="A form built with Views" style="position: relative; top: -500px; left: 150px; width: 75%;" />
           </section>
           <section>
             <h2>Time to kick some ass<br />in Drupal 8</h2>
@@ -180,27 +158,22 @@
           </section>
           <section>
             <h2>Dependency Injection</h2>
-            <pre><code class="php">&lt;?php
-class Drupal {
+            <pre><code class="php">class Drupal {
   protected static $container;
 
   public static function setContainer(ContainerInterface $container) {
     static::$container = $container;
   }
-
   public static function service($id) {
     return static::$container->get($id);
   }
-
   public static function entityManager() {
     return static::$container->get('plugin.manager.entity');
   }
-
   public static function database() {
     return static::$container->get('database');
   }
 }
-?>
 </code></pre>
           </section>
           <section>
@@ -225,15 +198,13 @@ class Drupal {
           </section>
           <section>
             <h2>index.php</h2>
-            <pre><code class="php">&lt;?php
-require_once __DIR__ . '/core/includes/bootstrap.inc';
+            <pre><code class="php">require_once __DIR__ . '/core/includes/bootstrap.inc';
 drupal_handle_request();
 </code></pre>
           </section>
           <section>
             <h3>drupal_handle_request()</h3>
-            <pre><code class="php">&lt;?php
-function drupal_handle_request($test_only = FALSE) {
+            <pre><code class="php">function drupal_handle_request($test_only = FALSE) {
   // Initialize the environment, load settings.php,
   // activate a PSR-0 class autoloader with required namespaces registered.
   drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
@@ -249,7 +220,7 @@ function drupal_handle_request($test_only = FALSE) {
 
   $kernel->terminate($request, $response);
 }
-?></code></pre>
+</code></pre>
           </section>
           <section>
             <h2>HttpKernel</h2>
@@ -271,8 +242,7 @@ function drupal_handle_request($test_only = FALSE) {
           </section>
           <section>
             <h2>system.routing.yml</h2>
-            <pre><code class="yaml">
-system.cron:
+            <pre><code class="yaml">system.cron:
   pattern: '/cron/{key}'
   defaults:
     _controller: '\Drupal\system\CronController::run'
@@ -288,8 +258,7 @@ system.machine_name_transliterate:
           </section>
           <section>
             <h3>aggregator.routing.yml</h3>
-            <pre><code class="yaml">
-aggregator_admin_overview:
+            <pre><code class="yaml">aggregator_admin_overview:
   pattern: 'admin/config/services/aggregator'
   defaults:
     _content: '\Drupal\aggregator\Routing\AggregatorController::adminOverview'
@@ -306,10 +275,7 @@ aggregator_admin_settings:
           </section>
           <section>
             <h2>Route Enhancers</h2>
-            <pre><code class="php">&lt;?php
-class ContentControllerEnhancer implements RouteEnhancerInterface {
-  // ...
-
+            <pre><code class="php">class ContentControllerEnhancer implements RouteEnhancerInterface {
   protected $types = array(
     'drupal_dialog' => 'controller.dialog:dialog',
     'drupal_modal' => 'controller.dialog:modal',
@@ -326,7 +292,6 @@ class ContentControllerEnhancer implements RouteEnhancerInterface {
     return $defaults;
   }
 }
-?>
 </code></pre>
           </section>
           <section>
@@ -338,8 +303,7 @@ class ContentControllerEnhancer implements RouteEnhancerInterface {
           </section>
           <section>
             <h3>Built-in ParamConverter</h3>
-            <pre><code class="php">&lt;?php
-class ParamConverterManager implements RouteEnhancerInterface {
+            <pre><code class="php">class ParamConverterManager implements RouteEnhancerInterface {
   public function enhance(array $defaults, Request $request) {
     $converters = array();
 
@@ -354,7 +318,6 @@ class ParamConverterManager implements RouteEnhancerInterface {
     return $defaults;
   }
 }
-?>
 </code></pre>
           </section>
           <section>
@@ -362,8 +325,6 @@ class ParamConverterManager implements RouteEnhancerInterface {
             <pre><code class="php">class RouteSubscriber implements EventSubscriberInterface {
   /**
    * Adds routes on the fly.
-   *
-   * @param \Drupal\Core\Routing\RouteBuildEvent $event
    */
   public function dynamicRoutes(RouteBuildEvent $event) {
     $collection = $event->getRouteCollection();
@@ -377,7 +338,6 @@ class ParamConverterManager implements RouteEnhancerInterface {
     return $events;
   }
 }
-?>
 </code></pre>
           </section>
           <section>
@@ -403,7 +363,6 @@ class ParamConverterManager implements RouteEnhancerInterface {
    */
   public static function create(ContainerInterface $container);
 }
-?>
 </code></pre>
           </section>
           <section>
@@ -435,7 +394,6 @@ class AggregatorController implements ControllerInterface {
     // ...
   }
 }
-?>
 </code></pre>
           </section>
           <section>
@@ -466,7 +424,6 @@ function system_date_time_lookup($form, &$form_state) {
   $response->addCommand(new ReplaceCommand('#format', '&lt;small id="format">' . $format . '&lt;/small>'));
   return $response;
 }
-?>
 </code></pre>
           </section>
         </section>
@@ -487,11 +444,11 @@ function system_date_time_lookup($form, &$form_state) {
           </section>
           <section>
             <h2>REST: Entities</h2>
-            <ul>
-              <li class="fragment">GET /node/1</li>
-              <li class="fragment">DELETE /node/1</li>
-              <li class="fragment">POST /node</li>
-              <li class="fragment">PATCH /node/1</li>
+            <ul class="fragment">
+              <li>GET /node/1</li>
+              <li>DELETE /node/1</li>
+              <li>POST /node</li>
+              <li>PATCH /node/1</li>
             </ul>
           </section>
           <section>
@@ -502,12 +459,8 @@ function system_date_time_lookup($form, &$form_state) {
           </section>
           <section>
             <h2>REST: Your resource</h2>
-            <pre><code class="php">&lt;?php
-interface ResourceInterface extends PluginInspectionInterface {
-
+            <pre><code class="php">interface ResourceInterface extends PluginInspectionInterface {
   /**
-   * Returns a collection of routes with URL path information for the resource.
-   *
    * @return \Symfony\Component\Routing\RouteCollection
    */
   public function routes();
@@ -519,14 +472,18 @@ interface ResourceInterface extends PluginInspectionInterface {
 
   /**
    * Returns the available HTTP request methods on this plugin.
-   *
-   * @return array
-   *   The list of supported methods. Example: array('GET', 'POST', 'PATCH').
    */
   public function availableMethods();
 }
-?>
 </code></pre>
+          </section>
+          <section>
+            <h2>Serializer</h2>
+            <ul>
+              <li class="fragment">Can REST offer any supported format</li>
+              <li class="fragment">New format: new encoder</li>
+              <li class="fragment">New object type: new normalizer</li>
+            </ul>
           </section>
         </section>
         <section>
@@ -535,10 +492,56 @@ interface ResourceInterface extends PluginInspectionInterface {
           </section>
           <section>
             <h2>Plugins</h2>
-            <p>User-configurable logic</p>
+            <p class="fragment">User-configurable logic</p>
+            <ol class="fragment">
+              <li>Discovery</li>
+              <li>Instantiation (factory)</li>
+            </ol>
           </section>
           <section>
-            Get help from Kris
+            <h3>Managers</h3>
+            <pre><code class="php">class ArchiverManager extends PluginManagerBase {
+
+  public function __construct(\Traversable $namespaces) {
+    $this->discovery = new AnnotatedClassDiscovery('Archiver', $namespaces);
+    $this->discovery = new AlterDecorator($this->discovery, 'archiver_info');
+    $this->discovery = new CacheDecorator($this->discovery, 'archiver_info');
+  }
+
+  public function createInstance($plugin_id, array $configuration = array()) {
+    $plugin_definition = $this->discovery->getDefinition($plugin_id);
+    $plugin_class = DefaultFactory::getPluginClass($plugin_id, $plugin_definition);
+    return new $plugin_class($configuration['filepath']);
+  }
+
+  public function getInstance(array $options) {
+    return $this->mapper->getInstance($options);
+  }
+}
+</code></pre>
+          </section>
+          <section>
+            <h3>Implementation</h3>
+            <p>POPO</p>
+            <pre><code class="php">/**
+ * Defines a archiver implementation for .tar files.
+ *
+ * @Plugin(
+ *   id = "Tar",
+ *   title = @Translation("Tar"),
+ *   description = @Translation("Handles .tar files."),
+ *   extensions = {"tar", "tgz", "tar.gz", "tar.bz2"}
+ * )
+ */
+class Tar implements ArchiverInterface {
+
+  public function __construct($file_path) { }
+
+  public function add($file_path) { }
+  public function remove($file_path) { }
+  public function extract($path, array $files = array()) { }
+}
+</code></pre>
           </section>
           <section>
             <h2>Entities</h2>
@@ -546,6 +549,7 @@ interface ResourceInterface extends PluginInspectionInterface {
               <li class="fragment">Basic data object system</li>
               <li class="fragment">"Don't call it an ORM" (even though it is)</li>
               <li class="fragment">Version 3, basically</li>
+              <li class="fragment">... and $node->save() works now!</li>
             </ul>
           </section>
           <section>
@@ -558,9 +562,6 @@ interface ResourceInterface extends PluginInspectionInterface {
             </ul>
           </section>
           <section>
-            Get help from Fago
-          </section>
-          <section>
             <h3>Disk-based configuration</h3>
             <ul>
               <li class="fragment">No more DB configuration!</li>
@@ -569,7 +570,18 @@ interface ResourceInterface extends PluginInspectionInterface {
             </ul>
           </section>
           <section>
-            Sample of config file
+            <h3>book.settings.yml</h3>
+            <pre><code class="yaml">allowed_types:
+  - book
+block:
+  navigation:
+    mode: 'all pages'
+child_type: book
+</code></pre>
+            <pre><code class="php">
+$settings = $configManager->get('book.settings');
+$types = $settings->get('allowed_types');
+</code></pre>
           </section>
           <section>
             <h3>Hooks</h3>
@@ -651,9 +663,71 @@ interface ResourceInterface extends PluginInspectionInterface {
         </section>
         <section>
           <section>
-            Good open source citizens
-            Stuff we're doing elsewhere
-            Recycle previous slides, add more if you can (Serializer and Validator)
+            <h2>Let's work together</h2>
+          </section>
+          <section>
+            <img style="width: 90%" src="assets/kitten-mindmeld.jpg" alt="We need help" data-credit="http://nagamakironin.blogspot.fr/2010/09/dennis-markuze-you-need-help.html" />
+          </section>
+          <section>
+            <h2>Collaboration</h2>
+            <ul>
+              <li class="fragment">Symfony2: MIT License</li>
+              <li class="fragment">Drupal: GPL License</li>
+              <li class="fragment">Code only flows one way. :-(</li>
+              <li class="fragment">Work can begin anywhere :-)</li>
+            </ul>
+            <h2 class="fragment" style="margin-top: 1em;">Coordination</h2>
+            <ul>
+              <li class="fragment"><a href="http://groups.drupal.org/node/250578">Security releases</a></li>
+            </ul>
+          </section>
+          <section class="slide">
+            <p>We're in UR pull requests, improvin' ur Framework</p>
+          </section>
+          <section>
+            <h2>We're coming upstream</h2>
+            <ul>
+              <li class="fragment">Symfony2 "flash messages": Too simple for us</li>
+              <li class="fragment"><code>drupal_set_message()</code></li>
+              <li class="fragment">Make less code in the world!</li>
+              <li class="fragment">Drupalers designed needs for improved API</li>
+              <li class="fragment">Drak (of Zikula CMS) <a href="https://github.com/symfony/symfony/pull/2853">implemented it</a></li>
+              <li class="fragment">Added in Symfony 2.1.</li>
+              <li class="fragment"><a href="http://drupal.org/node/335411">Drupal issue</a></li>
+            </ul>
+          </section>
+          <section>
+            <h2>File Streaming</h2>
+            <ul>
+              <li class="fragment">Readfile()? fpassthru()? X-Sendfile? One response class.</li>
+              <li class="fragment">Fabien says it should be in HttpFoundation. We agree.</li>
+              <li class="fragment"><a href="https://github.com/symfony/symfony/issues/3602">Added in 2.2</a></li>
+              <li class="fragment">Added in Drupal 8</li>
+              <li class="fragment">Make less code in the world!</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Context, context, context</h2>
+            <ul>
+              <li class="fragment">Context support in Serializer</li>
+              <li class="fragment">Context support in Validator</li>
+            </ul>
+          </section>
+          <section>
+            <p>That whole Symfony CMF Router thing...</p>
+          </section>
+          <section>
+            <h2>Odds and ends</h2>
+            <ul>
+              <li class="fragment"><a href="https://github.com/symfony/symfony/pull/3954"><code>Response::prepare()</code> chaining</a></li>
+              <li class="fragment"><a href="https://github.com/symfony/symfony/pull/4017">Improve FlattenException</a></li>
+              <li class="fragment"><a href="https://github.com/symfony/symfony/pull/4510">UTF-8 encoding weirdness in JSON</a></li>
+              <li class="fragment"><a href="https://github.com/symfony/symfony/pull/4642">Make RouteCollection Countable</a></li>
+              <li class="fragment"><a href="https://github.com/symfony/symfony/pull/4755">Improve Route serialization</a></li>
+              <li class="fragment"><a href="https://github.com/symfony/symfony/pull/5381">Add lockExists to Store interface</a></li>
+
+              <li class="fragment" style="margin-top: 2em;">And more...</li>
+            </ul>
           </section>
         </section>
         <section>
@@ -689,7 +763,7 @@ interface ResourceInterface extends PluginInspectionInterface {
           </section>
         </section>
         <section>
-          Questions/feedback
+          <h1>Questions</h1>
         </section>
       </div>
     </div>
